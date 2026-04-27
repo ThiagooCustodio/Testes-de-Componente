@@ -22,7 +22,7 @@ def setup_system():
     )
 
     return service, vehicle_repo, driver_repo, rental_repo, hold_repo
-
+ 
 
 # 1. locação com sucesso
 def test_rent_vehicle_success(setup_system):
