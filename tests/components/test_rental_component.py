@@ -74,3 +74,19 @@ def test_veiculo_disponivel():
        assert veiculo_disp2 is True
        assert veiculo_disp3 is False
 
+#7. Teste motoristas com no máximo 2 locações
+def test_limite_locacoes_ativas():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+
+    locacao1 = service.rent_vehicle(10, 1)
+    locacao2 = service.rent_vehicle(10, 2)
+
+    # Cria mais um veículo 
+    vehicle_repo._vehicles[4] = {"model": "Pickup", "available": True}
+
+    locacao3 = service.rent_vehicle(10, 4)
+
+    assert locacao1 is True
+    assert locacao2 is True
+    assert locacao3 is False
+
