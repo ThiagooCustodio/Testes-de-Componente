@@ -1,14 +1,13 @@
 import pytest
 
-from vehicle_repository import VehicleRepository
-from driver_repository import DriverRepository
-from rental_repository import RentalRepository
-from hold_repository import HoldRepository
-from rental_service import RentalService
+from src.vehicle_repository import VehicleRepository
+from src.driver_repository import DriverRepository
+from src.rental_repository import RentalRepository
+from src.hold_repository import HoldRepository
+from src.rental_service import RentalService
 
 
-@pytest.fixture
-def setup_system():
+def criar_locacao():
     vehicle_repo = VehicleRepository()
     driver_repo = DriverRepository()
     rental_repo = RentalRepository()
@@ -25,10 +24,16 @@ def setup_system():
  
 
 # 1. locação com sucesso
-def test_rent_vehicle_success(setup_system):
-    service, vehicle_repo, *_ = setup_system
+def test_rent_veiculo_sucesso():
+   service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+   test = service.rent_vehicle(10, 1)
 
-    result = service.rent_vehicle(10, 1)
+   assert test is True
+   assert vehicle_repo.is_available(1) is False
 
-    assert result is True
-    assert vehicle_repo.is_available(1) is False
+#2 teste se o motorista existir
+def test_existencia_motorista():
+       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+       motorista = service.rent_vehicle(1, 1)
+       
+       assert motorista is False
