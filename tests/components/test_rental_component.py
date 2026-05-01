@@ -37,3 +37,10 @@ def test_existencia_motorista():
        motorista = service.rent_vehicle(1, 1)
        
        assert motorista is False
+
+#3 teste se o veículo existir
+def test_existencia_veiculo():
+       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+       veiculo = service.rent_vehicle(1, 11)
+       
+       assert veiculo is False
