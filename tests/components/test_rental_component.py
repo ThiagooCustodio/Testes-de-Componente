@@ -55,9 +55,11 @@ def test_motorista_bloqueado():
 #5. Teste motorista com habilitação válida
 def test_motorista_habilitacao_invalida():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       motorista_habilit_invalida = service.rent_vehicle(30, 1)
+       motorista_habilit_invalida1 = service.rent_vehicle(30, 1)
+       motorista_habilit_invalida2 = service.rent_vehicle(10, 1)
        
-       assert motorista_habilit_invalida is False
+       assert motorista_habilit_invalida1 is False
+       assert motorista_habilit_invalida2 is True
 
 #6. Teste veículo disponível
 def test_veiculo_disponivel():
