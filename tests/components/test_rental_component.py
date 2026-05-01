@@ -23,7 +23,7 @@ def criar_locacao():
     return service, vehicle_repo, driver_repo, rental_repo, hold_repo
  
 
-# 1. locação com sucesso
+#1. Teste locação com sucesso
 def test_rent_veiculo_sucesso():
    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
    test = service.rent_vehicle(10, 1)
@@ -31,16 +31,23 @@ def test_rent_veiculo_sucesso():
    assert test is True
    assert vehicle_repo.is_available(1) is False
 
-#2 teste se o motorista existir
+#2. Teste se o motorista existir
 def test_existencia_motorista():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
        motorista = service.rent_vehicle(1, 1)
        
        assert motorista is False
 
-#3 teste se o veículo existir
+#3. Teste se o veículo existir
 def test_existencia_veiculo():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       veiculo = service.rent_vehicle(1, 11)
+       veiculo = service.rent_vehicle(10, 10)
        
        assert veiculo is False
+
+#4. Teste motorista bloqueado
+def test_motorista_bloqueado():
+       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+       motorista_bloqueado = service.rent_vehicle(20, 1)
+       
+       assert motorista_bloqueado is False
