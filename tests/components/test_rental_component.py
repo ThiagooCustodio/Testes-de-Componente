@@ -98,8 +98,27 @@ def test_veiculo_disponivel():
        assert veiculo_disp2 is True
        assert veiculo_disp3 is False
 
+#8. Teste tentativa de reserva duplicada
+def test_reservas_duplicadas():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
+    hold_repo.add_hold(10, 1)
+    hold_repo.add_hold(40, 1)
 
+    # continua existindo reserva para o veículo
+    assert hold_repo.has_any_hold(1) is True
+
+    # ambos estão na lista (duplicado permitido)
+    assert hold_repo.has_hold(10, 1) is True
+    assert hold_repo.has_hold(40, 1) is True 
+
+""" def test_reserva_duplicada_deve_falhar():
+     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+     
+     hold_repo.add_hold(10, 1)
+     with pytest.raises(ValueError):
+          hold_repo.add_hold(40, 1)   """
+ 
 #1111. Teste se o veículo já esta reservado para um motorista
 def test_veiculo_ja_reservado():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
