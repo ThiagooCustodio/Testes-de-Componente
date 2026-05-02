@@ -118,6 +118,24 @@ def test_reservas_duplicadas():
      hold_repo.add_hold(10, 1)
      with pytest.raises(ValueError):
           hold_repo.add_hold(40, 1)   """
+
+#9. Teste devolução simples sem reserva pendente;
+def test_devolucao_sem_reserva():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+
+    # faz a locação
+    resultado_locacao = service.rent_vehicle(10, 1)
+    assert resultado_locacao is True
+
+    # devolve o veículo
+    resultado_devolucao = service.return_vehicle(10, 1)
+    assert resultado_devolucao is True
+
+    # veículo volta a ficar disponível
+    assert vehicle_repo.is_available(1) is True
+
+    # locação deve ser removida
+    assert rental_repo.is_vehicle_with_driver(10, 1) is False
  
 #1111. Teste se o veículo já esta reservado para um motorista
 def test_veiculo_ja_reservado():
