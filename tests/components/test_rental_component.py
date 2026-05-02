@@ -90,3 +90,13 @@ def test_limite_locacoes_ativas():
     assert locacao2 is True
     assert locacao3 is False
 
+#8. Teste se o veículo já esta reservado para um motorista
+def test_veiculo_ja_reservado():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+
+    # motorista 10 reserva o veículo 1
+    hold_repo.add_hold(10, 1)
+    # motorista 40 tenta alugar o mesmo veículo
+    resultado = service.rent_vehicle(40, 1)
+
+    assert resultado is False
