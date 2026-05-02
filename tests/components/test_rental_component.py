@@ -34,30 +34,22 @@ def test_rent_veiculo_sucesso():
    #inclui a reserva do veículo 1
    assert rental_repo.has_active_rental(1) is True
 
-#2. Teste se o motorista existir
-def test_existencia_motorista():
-       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       motorista = service.rent_vehicle(1, 1)
-       
-       assert motorista is False
 
-#3. Teste se o veículo existir
+#2. Teste locação de veículo inexistente
 def test_existencia_veiculo():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
        veiculo = service.rent_vehicle(10, 10)
        
        assert veiculo is False
 
-#4. Teste motorista bloqueado
-def test_motorista_bloqueado():
+#3. Teste locação por motorista inexistente
+def test_existencia_motorista():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       motorista_bloqueado1 = service.rent_vehicle(20, 1)
-       motorista_bloqueado2 = service.rent_vehicle(10, 1)
+       motorista = service.rent_vehicle(1, 1)
        
-       assert motorista_bloqueado1 is False
-       assert motorista_bloqueado2 is True
+       assert motorista is False
 
-#5. Teste motorista com habilitação válida
+#4. Teste locação bloqueada por habilitação inválida
 def test_motorista_habilitacao_invalida():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
        motorista_habilit_invalida1 = service.rent_vehicle(30, 1)
@@ -66,18 +58,17 @@ def test_motorista_habilitacao_invalida():
        assert motorista_habilit_invalida1 is False
        assert motorista_habilit_invalida2 is True
 
-#6. Teste veículo disponível
-def test_veiculo_disponivel():
+#5. Teste locação bloqueada por motorista bloqueado
+def test_motorista_bloqueado():
        service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       veiculo_disp1 = service.rent_vehicle(10, 1)
-       veiculo_disp2 = service.rent_vehicle(10, 2)
-       veiculo_disp3 = service.rent_vehicle(10, 3)
+       motorista_bloqueado1 = service.rent_vehicle(20, 1)
+       motorista_bloqueado2 = service.rent_vehicle(10, 1)
        
-       assert veiculo_disp1 is True
-       assert veiculo_disp2 is True
-       assert veiculo_disp3 is False
+       assert motorista_bloqueado1 is False
+       assert motorista_bloqueado2 is True
 
-#7. Teste motoristas com no máximo 2 locações
+
+#6. Teste locação bloqueada por limite de 2 locações ativas
 def test_limite_locacoes_ativas():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
@@ -93,8 +84,23 @@ def test_limite_locacoes_ativas():
     assert locacao2 is True
     assert locacao3 is False
     #Aqui verificado que o sistema permite a locação de 2 veículos para cada motorista
+    #if self.rental_repository.count_active_rentals(driver_id) >= 2:
+            #return False
 
-#8. Teste se o veículo já esta reservado para um motorista
+#7. Teste reserva com sucesso para veículo indisponível
+def test_veiculo_disponivel():
+       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+       veiculo_disp1 = service.rent_vehicle(10, 1)
+       veiculo_disp2 = service.rent_vehicle(10, 2)
+       veiculo_disp3 = service.rent_vehicle(10, 3)
+       
+       assert veiculo_disp1 is True
+       assert veiculo_disp2 is True
+       assert veiculo_disp3 is False
+
+
+
+#1111. Teste se o veículo já esta reservado para um motorista
 def test_veiculo_ja_reservado():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
