@@ -157,6 +157,33 @@ def test_devolucao_com_reserva_pendente():
 
     # locação deve ter sido encerrada
     assert rental_repo.is_vehicle_with_driver(10, 1) is False    
+
+#11. Teste locação bem-sucedida por motorista que tinha reserva para o mesmo veículo, removendo a reserva;
+def test_locacao_com_reserva_do_mesmo_motorista_removendo_reserva():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+
+    # motorista 10 faz reserva
+    hold_repo.add_hold(10, 1)
+
+    # garante que o hold existe
+    assert hold_repo.has_hold(10, 1) is True
+
+    # motorista 10 realiza a locação
+    resultado = service.rent_vehicle(10, 1)
+
+    assert resultado is True
+
+    # veículo fica indisponível
+    assert vehicle_repo.is_available(1) is False
+
+    # locação foi registrada
+    assert rental_repo.is_vehicle_with_driver(10, 1) is True
+
+    # hold deve ser removido
+    assert hold_repo.has_hold(10, 1) is False
+
+
+#12. Teste sequência completa: locação → reserva por outro motorista → devolução → tentativa de nova locação.
  
 #1111. Teste se o veículo já esta reservado para um motorista
 def test_veiculo_ja_reservado():
