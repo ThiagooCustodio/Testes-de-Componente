@@ -29,7 +29,10 @@ def test_rent_veiculo_sucesso():
    test = service.rent_vehicle(10, 1)
 
    assert test is True
+   #retira a disponibilidade do veículo 1
    assert vehicle_repo.is_available(1) is False
+   #inclui a reserva do veículo 1
+   assert rental_repo.has_active_rental(1) is True
 
 #2. Teste se o motorista existir
 def test_existencia_motorista():
@@ -89,6 +92,7 @@ def test_limite_locacoes_ativas():
     assert locacao1 is True
     assert locacao2 is True
     assert locacao3 is False
+    #Aqui verificado que o sistema permite a locação de 2 veículos para cada motorista
 
 #8. Teste se o veículo já esta reservado para um motorista
 def test_veiculo_ja_reservado():
