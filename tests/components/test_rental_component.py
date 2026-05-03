@@ -88,15 +88,16 @@ def test_limite_locacoes_ativas():
             #return False
 
 #7. Teste reserva com sucesso para veículo indisponível
-def test_veiculo_disponivel():
-       service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-       veiculo_disp1 = service.rent_vehicle(10, 1)
-       veiculo_disp2 = service.rent_vehicle(10, 2)
-       veiculo_disp3 = service.rent_vehicle(10, 3)
-       
-       assert veiculo_disp1 is True
-       assert veiculo_disp2 is True
-       assert veiculo_disp3 is False
+def test_veiculo_reservado_para_outro_motorista():
+    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
+
+    # motorista 40 faz reserva
+    hold_repo.add_hold(40, 1)
+
+    # motorista 10 tenta alugar o mesmo veículo
+    resultado = service.rent_vehicle(10, 1)
+
+    assert resultado is False
 
 #8. Teste tentativa de reserva duplicada
 def test_reservas_duplicadas():
