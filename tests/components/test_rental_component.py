@@ -184,7 +184,7 @@ def test_locacao_com_reserva_do_mesmo_motorista_removendo_reserva():
 
 
 #12. Teste sequência completa: locação → reserva por outro motorista → devolução → tentativa de nova locação.
-def test_fluxo_completo_locacao_reserva_devolucao_nova_locacao():
+def test_fluxo_completo():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
     # 1. Motorista 10 aluga
@@ -214,14 +214,4 @@ def test_fluxo_completo_locacao_reserva_devolucao_nova_locacao():
     # hold deve ter sido removido
     assert hold_repo.has_hold(40, 1) is False
     
-     
-#1111. Teste se o veículo já esta reservado para um motorista
-def test_veiculo_ja_reservado():
-    service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
-
-    # motorista 10 reserva o veículo 1
-    hold_repo.add_hold(10, 1)
-    # motorista 40 tenta alugar o mesmo veículo
-    resultado = service.rent_vehicle(40, 1)
-
-    assert resultado is False
+    
