@@ -91,13 +91,17 @@ def test_limite_locacoes_ativas():
 def test_veiculo_reservado_para_outro_motorista():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # motorista 40 faz reserva
-    hold_repo.add_hold(40, 1)
+    # 1. deixa o veículo indisponível via locação
+    assert service.rent_vehicle(10, 1) is True
 
-    # motorista 10 tenta alugar o mesmo veículo
-    resultado = service.rent_vehicle(10, 1)
+    # 2. outro motorista tenta reservar
+    resultado = service.hold_vehicle(40, 1)
 
-    assert resultado is False
+    # 3. deve permitir a reserva
+    assert resultado is True
+
+    # 4. confirma que a reserva foi registrada
+    assert hold_repo.has_hold(40, 1) is True
 
 #8. Teste tentativa de reserva duplicada
 def test_reservas_duplicadas():
@@ -106,12 +110,16 @@ def test_reservas_duplicadas():
     hold_repo.add_hold(10, 1)
     hold_repo.add_hold(40, 1)
 
+
     # continua existindo reserva para o veículo
     assert hold_repo.has_any_hold(1) is True
 
     # ambos estão na lista (duplicado permitido)
     assert hold_repo.has_hold(10, 1) is True
-    assert hold_repo.has_hold(40, 1) is True 
+    assert hold_repo.has_hold(40, 1) is True  
+ 
+
+    
 
 """ def test_reserva_duplicada_deve_falhar():
      service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
