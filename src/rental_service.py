@@ -22,7 +22,9 @@ class RentalService:
             return False
 
         if not self.vehicle_repository.is_available(vehicle_id):
-            return False
+            # só bloqueia se NÃO for o motorista da reserva
+            if not self.hold_repository.has_hold(driver_id, vehicle_id):
+                return False
 
         if self.rental_repository.count_active_rentals(driver_id) >= 2:
             return False

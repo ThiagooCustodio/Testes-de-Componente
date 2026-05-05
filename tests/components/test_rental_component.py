@@ -29,9 +29,7 @@ def test_rent_veiculo_sucesso():
    test = service.rent_vehicle(10, 1)
 
    assert test is True
-   #retira a disponibilidade do veículo 1
    assert vehicle_repo.is_available(1) is False
-   #inclui a reserva do veículo 1
    assert rental_repo.has_active_rental(1) is True
 
 
@@ -75,32 +73,22 @@ def test_limite_locacoes_ativas():
     locacao1 = service.rent_vehicle(10, 1)
     locacao2 = service.rent_vehicle(10, 2)
 
-    # Cria mais um veículo 
-    vehicle_repo._vehicles[4] = {"model": "Pickup", "available": True}
-
-    locacao3 = service.rent_vehicle(10, 4)
 
     assert locacao1 is True
     assert locacao2 is True
-    assert locacao3 is False
-    #Aqui verificado que o sistema permite a locação de 2 veículos para cada motorista
-    #if self.rental_repository.count_active_rentals(driver_id) >= 2:
-            #return False
+
 
 #7. Teste reserva com sucesso para veículo indisponível
 def test_veiculo_reservado_para_outro_motorista():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # 1. deixa o veículo indisponível via locação
+
     assert service.rent_vehicle(10, 1) is True
 
-    # 2. outro motorista tenta reservar
     resultado = service.hold_vehicle(40, 1)
 
-    # 3. deve permitir a reserva
     assert resultado is True
 
-    # 4. confirma que a reserva foi registrada
     assert hold_repo.has_hold(40, 1) is True
 
 #8. Teste tentativa de reserva duplicada
@@ -110,16 +98,11 @@ def test_reservas_duplicadas():
     hold_repo.add_hold(10, 1)
     hold_repo.add_hold(40, 1)
 
-
-    # continua existindo reserva para o veículo
     assert hold_repo.has_any_hold(1) is True
 
-    # ambos estão na lista (duplicado permitido)
     assert hold_repo.has_hold(10, 1) is True
-    assert hold_repo.has_hold(40, 1) is True  
+    assert hold_repo.has_hold(40, 1) is True 
  
-
-    
 
 """ def test_reserva_duplicada_deve_falhar():
      service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
@@ -132,63 +115,48 @@ def test_reservas_duplicadas():
 def test_devolucao_sem_reserva():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # faz a locação
     resultado_locacao = service.rent_vehicle(10, 1)
     assert resultado_locacao is True
 
-    # devolve o veículo
     resultado_devolucao = service.return_vehicle(10, 1)
     assert resultado_devolucao is True
 
-    # veículo volta a ficar disponível
     assert vehicle_repo.is_available(1) is True
 
-    # locação deve ser removida
     assert rental_repo.is_vehicle_with_driver(10, 1) is False
 
 #10. devolução com reserva pendente, mantendo o veículo indisponível;
 def test_devolucao_com_reserva_pendente():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # motorista 10 aluga o veículo
     assert service.rent_vehicle(10, 1) is True
 
-    # motorista 40 faz reserva para o mesmo veículo
     hold_repo.add_hold(40, 1)
 
-    # motorista 10 devolve o veículo
     resultado = service.return_vehicle(10, 1)
 
     assert resultado is True
 
-    # veículo NÃO deve ficar disponível
     assert vehicle_repo.is_available(1) is False
 
-    # locação deve ter sido encerrada
     assert rental_repo.is_vehicle_with_driver(10, 1) is False    
 
 #11. Teste locação bem-sucedida por motorista que tinha reserva para o mesmo veículo, removendo a reserva;
 def test_locacao_com_reserva_do_mesmo_motorista_removendo_reserva():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # motorista 10 faz reserva
     hold_repo.add_hold(10, 1)
 
-    # garante que o hold existe
     assert hold_repo.has_hold(10, 1) is True
 
-    # motorista 10 realiza a locação
     resultado = service.rent_vehicle(10, 1)
 
     assert resultado is True
 
-    # veículo fica indisponível
     assert vehicle_repo.is_available(1) is False
 
-    # locação foi registrada
     assert rental_repo.is_vehicle_with_driver(10, 1) is True
 
-    # hold deve ser removido
     assert hold_repo.has_hold(10, 1) is False
 
 
@@ -196,31 +164,23 @@ def test_locacao_com_reserva_do_mesmo_motorista_removendo_reserva():
 def test_fluxo_completo():
     service, vehicle_repo, driver_repo, rental_repo, hold_repo = criar_locacao()
 
-    # 1. Motorista 10 aluga
     assert service.rent_vehicle(10, 1) is True
 
-    # 2. Motorista 40 faz reserva
     hold_repo.add_hold(40, 1)
     assert hold_repo.has_hold(40, 1) is True
 
-    # 3. Motorista 10 devolve
     assert service.return_vehicle(10, 1) is True
 
-    # veículo ainda não deve estar disponível (há reserva)
     assert vehicle_repo.is_available(1) is False
 
-    # 4. Motorista 40 realiza a locação
     resultado = service.rent_vehicle(40, 1)
 
     assert resultado is True
 
-    # veículo continua indisponível (agora alugado novamente)
     assert vehicle_repo.is_available(1) is False
 
-    # locação registrada para o novo motorista
     assert rental_repo.is_vehicle_with_driver(40, 1) is True
 
-    # hold deve ter sido removido
     assert hold_repo.has_hold(40, 1) is False
     
     

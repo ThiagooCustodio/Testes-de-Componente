@@ -3,6 +3,8 @@ class HoldRepository:
         self._holds = []
 
     def add_hold(self, driver_id: int, vehicle_id: int) -> None:
+        #if self.has_any_hold(vehicle_id):
+            #raise ValueError("Vehicle already reserved")
         self._holds.append({"driver_id": driver_id, "vehicle_id": vehicle_id})
 
     def has_hold(self, driver_id: int, vehicle_id: int) -> bool:
